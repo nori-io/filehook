@@ -11,12 +11,11 @@ import (
 type plugin struct {
 	instance logger.Hook
 	log      logger.Logger
-
-	//config   *pluginConfig
+	config   *pluginConfig
 }
 
 type pluginConfig struct {
-	VerificationType config.String
+	Path config.String
 }
 
 type instance struct {
@@ -28,10 +27,10 @@ var (
 )
 
 func (p *plugin) Init(_ context.Context, config config.Manager) error {
-	//	cm := config.Register(p.Meta())
-	/*	p.config = &pluginConfig{
-		VerificationType: cm.String("", "verification type: NoVerify, WhiteList or BlackList"),
-	}*/
+	cm := config.Register(p.Meta())
+	p.config = &pluginConfig{
+		Path: cm.String("hooks.filehook.path", "filepath of filehook"),
+	}
 	return nil
 }
 
@@ -54,7 +53,7 @@ func (p plugin) Meta() meta.Meta {
 		},
 		Dependencies: []meta.Dependency{},
 		Description:  meta.Description{},
-		//	Interface:   interfaces.HttpInterface,
+		//Interface:    interfaces.HttpInterface,
 		License: []meta.License{
 			{
 				Title: "",
@@ -62,6 +61,6 @@ func (p plugin) Meta() meta.Meta {
 				URI:   "https://www.gnu.org/licenses/",
 			},
 		},
-		Tags: []string{"hook", "hooks"},
+		Tags: []string{"hook", "hooks", "logger", "nori"},
 	}
 }
